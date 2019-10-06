@@ -18,7 +18,7 @@ class KotlinRepoViewModel (val kotlinRepo: Repository) : ViewModel(){
     private var repoRecords: MutableLiveData<List<CommitRepoModel>>? = MutableLiveData()
     private var showProgress: MutableLiveData<Boolean>? = MutableLiveData()
     var compositeDisposable = CompositeDisposable()
-    lateinit var disposable: Disposable
+
 
 
     fun getShowProgress():MutableLiveData<Boolean>?{
@@ -35,7 +35,9 @@ class KotlinRepoViewModel (val kotlinRepo: Repository) : ViewModel(){
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({t-> repoRecords?.value = t
-                    showProgress?.value = false}))
+                    showProgress?.value = false}, {
+                    Log.i("ViewModel error",it.message)
+                }))
     }
 
     fun onShowRepoRecords() : MutableLiveData<List<CommitRepoModel>>?{

@@ -48,10 +48,20 @@ class RepoFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this,repoModelViewFactory).get(KotlinRepoViewModel::class.java)
 
-        val repos : MutableLiveData<List<CommitRepoModel>>? = viewModel.onShowRepoRecords()
         val displayProgress : MutableLiveData<Boolean>? = viewModel.getShowProgress()
 
         viewModel.getRepoRecords()
+
+
+        displayProgress?.observe(this, object : Observer<Boolean> {
+            override fun onChanged(t: Boolean?) {
+                if (t == false)
+                    prgs_bar.visibility = View.GONE
+                else
+                    prgs_bar.visibility = View.VISIBLE
+            }
+        })
+
 
         viewModel.onShowRepoRecords()?.observe(this, Observer {
 
