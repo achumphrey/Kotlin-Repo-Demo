@@ -29,15 +29,13 @@ class RepoAdapter ( val repoModel: MutableList<CommitRepoModel>):
         holder.tvAuthorName.text = repoModel[position].commit.author?.name
 
         holder.imgAuthor.loadImage(repoModel[position].committer?.avatar_url)
-
     }
-
 }
+
 class RepoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     val tvCommitTitle = view.tvcommitTitle
     val tvAuthorName = view.tvAuthorName
     val tvCommitTime = view.tvCommitTime
     val imgAuthor = view.imgAuthor
-
 }

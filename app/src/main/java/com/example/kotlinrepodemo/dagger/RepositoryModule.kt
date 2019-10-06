@@ -1,7 +1,8 @@
 package com.example.kotlinrepodemo.dagger
 
-import android.app.Application
+import com.example.kotlinrepodemo.network.ClientInterface
 import com.example.kotlinrepodemo.repository.Repository
+import com.example.kotlinrepodemo.repository.RepositoryImpl
 import com.example.kotlinrepodemo.viewmodel.ViewModelFactory
 import dagger.Module
 import dagger.Provides
@@ -14,5 +15,11 @@ class RepositoryModule {
     @Singleton
     fun provideTeamViewModelFactory(repository: Repository): ViewModelFactory{
         return ViewModelFactory(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRepository(clientInterface: ClientInterface): Repository{
+        return RepositoryImpl(clientInterface)
     }
 }

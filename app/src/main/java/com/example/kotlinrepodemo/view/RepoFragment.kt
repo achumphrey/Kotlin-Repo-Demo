@@ -32,16 +32,14 @@ class RepoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-
-
-
         return inflater.inflate(R.layout.repo_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         DaggerNetworkComponent.builder()
-            .networkModule( NetworkModule(activity!!.application))
+            .networkModule(NetworkModule(activity!!.application))
             .repositoryModule(RepositoryModule())
             .build()
             .inject(this)
@@ -51,7 +49,6 @@ class RepoFragment : Fragment() {
         val displayProgress : MutableLiveData<Boolean>? = viewModel.getShowProgress()
 
         viewModel.getRepoRecords()
-
 
         displayProgress?.observe(this, object : Observer<Boolean> {
             override fun onChanged(t: Boolean?) {
