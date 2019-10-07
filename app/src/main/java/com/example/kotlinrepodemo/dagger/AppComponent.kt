@@ -7,7 +7,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = arrayOf(NetworkModule::class, RepositoryModule::class))
-interface NetworkComponent {
+interface AppComponent {
 
     fun inject (repoFragment: RepoFragment)
 }

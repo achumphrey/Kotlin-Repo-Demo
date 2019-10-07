@@ -1,6 +1,5 @@
 package com.example.kotlinrepodemo.repository
 
-import android.app.Application
 import com.example.kotlinrepodemo.model.CommitRepoModel
 import com.example.kotlinrepodemo.network.ClientInterface
 import io.reactivex.Observable

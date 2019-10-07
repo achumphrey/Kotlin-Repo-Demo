@@ -6,15 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.example.kotlinrepodemo.R
-import com.example.kotlinrepodemo.dagger.DaggerNetworkComponent
+import com.example.kotlinrepodemo.dagger.DaggerAppComponent
 import com.example.kotlinrepodemo.dagger.NetworkModule
 import com.example.kotlinrepodemo.dagger.RepositoryModule
-import com.example.kotlinrepodemo.model.CommitRepoModel
 import com.example.kotlinrepodemo.viewmodel.KotlinRepoViewModel
 import com.example.kotlinrepodemo.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.repo_fragment.*
@@ -38,7 +38,7 @@ class RepoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        DaggerNetworkComponent.builder()
+        DaggerAppComponent.builder()
             .networkModule(NetworkModule(activity!!.application))
             .repositoryModule(RepositoryModule())
             .build()
@@ -46,11 +46,10 @@ class RepoFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this,repoModelViewFactory).get(KotlinRepoViewModel::class.java)
 
-        val displayProgress : MutableLiveData<Boolean>? = viewModel.getShowProgress()
 
         viewModel.getRepoRecords()
 
-        displayProgress?.observe(this, object : Observer<Boolean> {
+        viewModel.getShowProgress()?.observe(this, object : Observer<Boolean> {
             override fun onChanged(t: Boolean?) {
                 if (t == false)
                     prgs_bar.visibility = View.GONE
@@ -65,6 +64,11 @@ class RepoFragment : Fragment() {
             adapter.repoModel.addAll(it)
             adapter.notifyDataSetChanged()
         })
+
+        viewModel.onError()?.observe(this, Observer {
+            Toast.makeText(activity,it,Toast.LENGTH_LONG).show()
+        })
+
 
         setUpRecyclerView()
     }

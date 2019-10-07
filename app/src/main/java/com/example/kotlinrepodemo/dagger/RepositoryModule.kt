@@ -13,7 +13,7 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideTeamViewModelFactory(repository: Repository): ViewModelFactory{
+    fun provideViewModelFactory(repository: Repository): ViewModelFactory{
         return ViewModelFactory(repository)
     }
 

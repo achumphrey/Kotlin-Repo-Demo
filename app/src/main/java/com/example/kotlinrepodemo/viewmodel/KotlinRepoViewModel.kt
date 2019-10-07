@@ -17,27 +17,23 @@ class KotlinRepoViewModel (val kotlinRepo: Repository) : ViewModel(){
 
     private var repoRecords: MutableLiveData<List<CommitRepoModel>>? = MutableLiveData()
     private var showProgress: MutableLiveData<Boolean>? = MutableLiveData()
+    private var showError: MutableLiveData<String>? = MutableLiveData()
     var compositeDisposable = CompositeDisposable()
-    lateinit var disposable: Disposable
 
-    fun getShowProgress():MutableLiveData<Boolean>?{
-        return showProgress
-    }
 
     fun getRepoRecords(){
-        showProgress?.value = true
 
         val repoObservable: Single<List<CommitRepoModel>> = kotlinRepo.getKotlinCommits()
 
         compositeDisposable.add(
             repoObservable
-                .doOnSubscribe {d-> disposable = d }
+                .doOnSubscribe {showProgress?.postValue(true) }
                 .doOnError {
-                    it.message
+                    showProgress?.value = false
                 }
                 .subscribe({t-> repoRecords?.value = t
                     showProgress?.value = false}, {
-                    Log.i("ViewModel error",it.message)
+                    showError?.value = it.message.toString()
                 }))
     }
 
@@ -45,13 +41,20 @@ class KotlinRepoViewModel (val kotlinRepo: Repository) : ViewModel(){
         return repoRecords
     }
 
+    fun getShowProgress():MutableLiveData<Boolean>?{
+        return showProgress
+    }
+
+    fun onError():MutableLiveData<String>?{
+        return showError
+    }
+
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
         Log.i("OnCleared", "ViewModel destroyed")
     }
 
-    fun showError(){
-        Log.i("SHOW_ERROR", "Something Happened")
-    }
+
 }
