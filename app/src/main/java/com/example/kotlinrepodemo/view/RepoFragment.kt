@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import com.example.kotlinrepodemo.R
 import com.example.kotlinrepodemo.dagger.DaggerAppComponent
 import com.example.kotlinrepodemo.dagger.NetworkModule
 import com.example.kotlinrepodemo.dagger.RepositoryModule
+import com.example.kotlinrepodemo.model.CommitRepoModel
 import com.example.kotlinrepodemo.viewmodel.KotlinRepoViewModel
 import com.example.kotlinrepodemo.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.repo_fragment.*
@@ -26,6 +28,14 @@ class RepoFragment : Fragment() {
     lateinit var repoModelViewFactory: ViewModelFactory
     private lateinit var viewModel: KotlinRepoViewModel
     private lateinit var adapter: RepoAdapter
+
+    private val repoClickListener: RepoClickListener = object : RepoClickListener {
+        override fun onClick(repoModel: CommitRepoModel) {
+            val repoNameDialog = RepoNameDialog.instance(repoModel)
+                repoNameDialog.show(requireFragmentManager(),"AUTHOR_NAME")
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,7 +84,7 @@ class RepoFragment : Fragment() {
     }
 
     private  fun setUpRecyclerView(){
-        adapter = RepoAdapter(mutableListOf())
+        adapter = RepoAdapter(mutableListOf(), repoClickListener)
         rv_list.layoutManager = LinearLayoutManager(context)
         rv_list.adapter = adapter
     }

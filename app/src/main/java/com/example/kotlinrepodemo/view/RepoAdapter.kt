@@ -9,7 +9,7 @@ import com.example.kotlinrepodemo.common.loadImage
 import com.example.kotlinrepodemo.model.CommitRepoModel
 import kotlinx.android.synthetic.main.cardview_recyclerview.view.*
 
-class RepoAdapter ( val repoModel: MutableList<CommitRepoModel>):
+class RepoAdapter ( val repoModel: MutableList<CommitRepoModel>, private val repoClickListener: RepoClickListener):
     RecyclerView.Adapter<RepoViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoViewHolder {
@@ -29,6 +29,10 @@ class RepoAdapter ( val repoModel: MutableList<CommitRepoModel>):
         holder.tvAuthorName.text = repoModel[position].commit.author?.name
 
         holder.imgAuthor.loadImage(repoModel[position].committer?.avatar_url)
+
+        holder.itemView.setOnClickListener {
+            repoClickListener.onClick(repoModel[holder.adapterPosition])
+        }
     }
 }
 
